@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements MainContrato.View
     @Override
     protected void onResume() {
         super.onResume();
-        if (repositorios != null && !(repositorios.size() > 1)) {
+        if (repositorios != null && !(repositorios.size() > 0)) {
             presenter.solicitarRepositorios(page);
         }
     }
