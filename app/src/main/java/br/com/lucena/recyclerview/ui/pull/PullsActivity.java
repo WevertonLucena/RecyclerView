@@ -25,8 +25,6 @@ public class PullsActivity extends AppCompatActivity implements PullsContrato.Vi
     private List<Pull> pullList;
     private String autor;
     private String repositorio;
-    private Boolean isSaved = false;
-    private final int PULL_BROWSER = 2;
     private PullsPresenter presenter;
 
     @Override
@@ -45,7 +43,6 @@ public class PullsActivity extends AppCompatActivity implements PullsContrato.Vi
 
         if (savedInstanceState != null){
             pullList = savedInstanceState.getParcelableArrayList("pullList");
-            isSaved = true;
         }
 
         adapter = new PullAdapter(pullList, this, presenter);
@@ -62,7 +59,7 @@ public class PullsActivity extends AppCompatActivity implements PullsContrato.Vi
     @Override
     protected void onResume() {
         super.onResume();
-        if (! isSaved)
+        if (pullList != null && !(pullList.size() > 0))
             presenter.buscarPulls(autor,repositorio);
     }
 
@@ -76,15 +73,7 @@ public class PullsActivity extends AppCompatActivity implements PullsContrato.Vi
     @Override
     public void pullClicado(Pull pull) {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pull.url));
-        startActivityForResult(browserIntent,PULL_BROWSER);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PULL_BROWSER){
-            isSaved = true;
-        }
+        startActivity(browserIntent);
     }
 
     @Override

@@ -22,12 +22,11 @@ public class MainActivity extends AppCompatActivity implements MainContrato.View
 
     private LinearLayoutManager manager;
     private RepositorioAdapter adapter;
-    private Boolean isScrolling = false, isSaved = false;
+    private Boolean isScrolling = false;
     private int currentItems, totalItems, scrollOutItems;
     private ProgressBar progressBar;
     private List<Repositorio> repositorios;
     private int page;
-    private final int PULL_ACTIVITY = 1;
 
     private MainPresenter presenter;
 
@@ -46,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements MainContrato.View
         if (savedInstanceState != null){
             repositorios = savedInstanceState.getParcelableArrayList("repositorios");
             page = savedInstanceState.getInt("page");
-            isSaved = true;
         }
 
         adapter = new RepositorioAdapter(repositorios, this, presenter);
@@ -87,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements MainContrato.View
     @Override
     protected void onResume() {
         super.onResume();
-        if (! isSaved) {
+        if (repositorios != null && !(repositorios.size() > 1)) {
             presenter.solicitarRepositorios(page);
         }
     }
@@ -108,15 +106,7 @@ public class MainActivity extends AppCompatActivity implements MainContrato.View
         Intent i = new Intent(this,PullsActivity.class);
         i.putExtra("repositorio",repositorio.name);
         i.putExtra("autor",repositorio.autor.login);
-        startActivityForResult(i, PULL_ACTIVITY);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PULL_ACTIVITY){
-            isSaved = true;
-        }
+        startActivity(i);
     }
 
     @Override
